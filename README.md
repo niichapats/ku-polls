@@ -19,6 +19,6 @@ To be added.
 
 All project documents are in the [Project Wiki](../../wiki/Home).
 
-- [Vision Statement](../../wiki/Vision-and-Scope%20Statement)
+- [Vision Statement](../../wiki/Vision-and-Scope)
 - [Requirements](../../wiki/Requirements)
 - [Project Plan](../../wiki/Project%20Plan)
