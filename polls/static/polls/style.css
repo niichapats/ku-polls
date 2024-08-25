@@ -1,0 +1,9 @@
+li a {
+    color: DarkBlue;
+    font-size: 25px;
+}
+
+body {
+    background: white url("images/Background.png") no-repeat center center fixed;
+    background-size: cover;
+}
