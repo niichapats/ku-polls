@@ -1,9 +1,38 @@
 li a {
-    color: #6E2C00;
+    color: #6E2C00; /* Brown color for links */
     font-size: 25px;
 }
 
 body {
     background: white url("/static/images/background_new.png") no-repeat center center fixed;
     background-size: cover;
+    margin: 0;
+    padding: 0;
 }
+
+h1.ku-polls-title {
+    color: #6E2C00;
+    font-size: 40px;
+    text-align: left;
+    margin: 20px 20px;
+}
+.messages li {
+    font-size: 20px;
+}
+
+.to-list-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px 10px;
+    background-color: #CD5C5C;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.result-link {
+    color: ##DC7633;
+    font-size: 18px;
+    font-weight: normal;
+    margin-left: 10px;
