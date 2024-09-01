@@ -1,12 +1,17 @@
 li a {
-    color: #6E2C00; /* Brown color for links */
+    color: #6E2C00;
     font-size: 25px;
+}
+
+ul {
+  list-style-type: none;
+  margin: 2px 2px;
 }
 
 body {
     background: white url("/static/images/background_new.png") no-repeat center center fixed;
     background-size: cover;
-    margin: 0;
+    margin: 5px 5px;
     padding: 0;
 }
 
@@ -18,6 +23,7 @@ h1.ku-polls-title {
 }
 .messages li {
     font-size: 20px;
+    margin: 5px 5px;
 }
 
 .to-list-button {
