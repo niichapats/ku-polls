@@ -1,9 +1,9 @@
 li a {
-    color: DarkBlue;
+    color: #6E2C00;
     font-size: 25px;
 }
 
 body {
-    background: white url("images/Background.png") no-repeat center center fixed;
+    background: white url("/static/images/background_new.png") no-repeat center center fixed;
     background-size: cover;
 }
