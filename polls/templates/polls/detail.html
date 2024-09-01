@@ -23,5 +23,6 @@
   </form>
 {% endif %}
 
+<a href="{% url 'polls:results' question.id %}" class="result-link">Results</a>
 <br>
 <a href="{% url 'polls:index' %}" class="to-list-button">Back to list of polls</a>
