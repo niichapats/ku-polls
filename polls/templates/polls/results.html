@@ -9,17 +9,24 @@
     <h1>{{ question.question_text }}</h1>
     <h2>Poll Results</h2>
 
-    <ul>
-        {% for choice in question.choice_set.all %}
-            <li>
-                <span>{{ choice.choice_text }}</span>
-                <span>-- {{ choice.votes }} vote{{ choice.votes|pluralize }}</span>
-            </li>
-        {% endfor %}
-    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th>Choice</th>
+                <th>Votes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for choice in question.choice_set.all %}
+            <tr>
+                <td>{{ choice.choice_text }}</td>
+                <td>{{ choice.votes }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
     <br>
     <a href="{% url 'polls:index' %}" class="to-list-button">Back to list of polls</a>
 </body>
 </html>
-
