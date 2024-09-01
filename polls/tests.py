@@ -35,6 +35,53 @@ class QuestionModelTests(TestCase):
         recent_question = Question(pub_date=time)
         self.assertIs(recent_question.was_published_recently(), True)
 
+    def test_is_published_with_future_pub_date(self):
+        """
+        is_published() returns False for questions with a future pub_date.
+        """
+        future_time = timezone.now() + datetime.timedelta(days=1)
+        future_question = Question(pub_date=future_time)
+        self.assertFalse(future_question.is_published())
+
+    def test_is_published_with_now_pub_date(self):
+        """
+        is_published() returns True for questions with the current pub_date (now).
+        """
+        now_time = timezone.now()
+        question_now = Question(pub_date=now_time)
+        self.assertTrue(question_now.is_published())
+
+    def test_is_published_with_past_pub_date(self):
+        """
+        is_published() returns True for questions with a past pub_date.
+        """
+        past_time = timezone.now() - datetime.timedelta(days=1)
+        past_question = Question(pub_date=past_time)
+        self.assertTrue(past_question.is_published())
+
+    def test_can_vote_with_no_end_date(self):
+        """
+        can_vote() returns True if no end_date is set and the question is published.
+        """
+        question = Question(pub_date=timezone.now(), end_date=None)
+        self.assertTrue(question.can_vote())
+
+    def test_can_vote_with_end_date_in_future(self):
+        """
+        can_vote() returns True if current time is before the end_date.
+        """
+        future_end_date = timezone.now() + datetime.timedelta(days=5)
+        question = Question(pub_date=timezone.now(), end_date=future_end_date)
+        self.assertTrue(question.can_vote())
+
+    def test_cannot_vote_after_end_date(self):
+        """
+        can_vote() returns False if the current time is after the end_date.
+        """
+        past_end_date = timezone.now() - datetime.timedelta(days=1)
+        question = Question(pub_date=timezone.now(), end_date=past_end_date)
+        self.assertFalse(question.can_vote())
+
 
 def create_question(question_text, days):
     """
@@ -124,3 +171,5 @@ class QuestionDetailViewTests(TestCase):
         url = reverse("polls:detail", args=(past_question.id,))
         response = self.client.get(url)
         self.assertContains(response, past_question.question_text)
+
+
