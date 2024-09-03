@@ -4,6 +4,17 @@
 
 <h1 class="ku-polls-title">KU-Polls</h1>
 
+<div class="container">
+    {% if user.is_authenticated %}
+    Welcome back, {{ user.username }}
+    <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        <button>Logout</button>
+    {% else %}
+       Please <a href="{% url 'login' %}?next={{request.path}}">Login</a>
+    {% endif %}
+</div>
+
 {% if latest_question_list %}
     <ul>
     {% for question in latest_question_list %}
