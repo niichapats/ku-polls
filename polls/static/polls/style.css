@@ -9,7 +9,7 @@ ul {
 }
 
 body {
-    background: white url("/static/images/background_new.png") no-repeat center center fixed;
+    background: white url("/static/polls/images/background_new.png");
     background-size: cover;
     margin: 5px 5px;
     padding: 0;
