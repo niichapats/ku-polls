@@ -1,5 +1,4 @@
 """This module contains views of polls app"""
-
 from django.db.models import F
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
@@ -7,8 +6,9 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
-from .models import Question, Choice
+from .models import Question, Choice, Vote
 
 
 class IndexView(generic.ListView):
@@ -87,5 +87,34 @@ def vote(request, question_id):
 
     selected_choice.votes = F("votes") + 1
     selected_choice.save()
+
+    return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+
+@login_required
+def vote(request, question_id):
+    """ Handle user vote in a Django application."""
+    question = get_object_or_404(Question, pk=question_id)
+
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST["choice"])
+    except (KeyError, Choice.DoesNotExist):
+        context = {
+                "question": question,
+                "error_message": "You didn't select a choice.",
+            }
+        return render(request, "polls/detail.html", context)
+
+    #Reference to the current user
+    this_user = request.user
+
+    # Get the user's vote
+    try:
+        vote = this_user.vote_set.get(user=this_user, choice__question=question)
+        vote.choice = selected_choice
+        vote.save()
+        messages.success(request, f"Your vote was changed to '{selected_choice.choice_text}'")
+    except Vote.DoesNotExist:
+        Vote.objects.create(user=this_user, choice=selected_choice)
+        messages.success(request, f"You voted for '{selected_choice.choice_text}'")
 
     return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
