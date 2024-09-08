@@ -8,13 +8,13 @@ from django.utils import timezone
 from django.contrib import messages
 from django.contrib.messages import get_messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed  # Import signals
-from django.dispatch import receiver  # Import receiver for signals
+from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
+from django.dispatch import receiver
 
 from .models import Question, Choice, Vote
 
-# Get a logger for this module
 logger = logging.getLogger('polls')
+
 
 def get_client_ip(request):
     """Get the visitor’s IP address using request headers."""
@@ -25,11 +25,13 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+
 @receiver(user_logged_in)
 def log_user_login(sender, request, user, **kwargs):
     """Log the user login event."""
     ip_address = get_client_ip(request)
     logger.info(f'User {user.username} logged in from {ip_address}')
+
 
 @receiver(user_logged_out)
 def log_user_logout(sender, request, user, **kwargs):
@@ -37,12 +39,14 @@ def log_user_logout(sender, request, user, **kwargs):
     ip_address = get_client_ip(request)
     logger.info(f'User {user.username} logged out from {ip_address}')
 
+
 @receiver(user_login_failed)
 def log_failed_login(sender, credentials, request, **kwargs):
     """Log the failed login attempt."""
     ip_address = get_client_ip(request)
     username = credentials.get('username', 'unknown')
     logger.warning(f'User {username} login failed from {ip_address}')
+
 
 class IndexView(generic.ListView):
     """Take request to index.html which displays the latest few questions."""
@@ -55,6 +59,7 @@ class IndexView(generic.ListView):
         (not including those set to be published in the future).
         """
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
+
 
 class DetailView(generic.DetailView):
     """
@@ -69,6 +74,24 @@ class DetailView(generic.DetailView):
         Excludes any questions that aren't published yet.
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        question = self.get_object()
+
+        # Get the current user vote for this question
+        user_vote = None
+        if self.request.user.is_authenticated:
+            try:
+                # Get the choice that the user has already voted for this question
+                user_vote = Vote.objects.get(user=self.request.user, choice__question=question)
+                context['user_vote'] = user_vote.choice.id
+            except Vote.DoesNotExist:
+                context['user_vote'] = None
+        else:
+            context['user_vote'] = None
+
+        return context
 
     def get(self, request, *args, **kwargs):
         question = self.get_object()
@@ -86,6 +109,7 @@ class DetailView(generic.DetailView):
 
         return super().get(request, *args, **kwargs)
 
+
 class ResultsView(generic.DetailView):
     """
     Take request to results.html
@@ -93,6 +117,7 @@ class ResultsView(generic.DetailView):
     """
     model = Question
     template_name = "polls/results.html"
+
 
 @login_required
 def vote(request, question_id):
