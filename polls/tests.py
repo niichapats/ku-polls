@@ -3,8 +3,11 @@ import datetime
 from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from mysite import settings
 
-from .models import Question
+from .models import Question, Choice
 
 
 class QuestionModelTests(TestCase):
@@ -172,4 +175,56 @@ class QuestionDetailViewTests(TestCase):
         response = self.client.get(url)
         self.assertContains(response, past_question.question_text)
 
+class UserAuthTest(TestCase):
+
+    def setUp(self):
+        # superclass setUp creates a Client object and initializes test database
+        super().setUp()
+        self.username = "testuser"
+        self.password = "FatChance!"
+        self.user1 = User.objects.create_user(
+            username=self.username,
+            password=self.password,
+            email="testuser@nowhere.com"
+        )
+        self.user1.first_name = "Tester"
+        self.user1.save()
+        # we need a poll question to test voting
+        q = Question.objects.create(question_text="First Poll Question")
+        q.save()
+        # a few choices
+        for n in range(1, 4):
+            choice = Choice(choice_text=f"Choice {n}", question=q)
+            choice.save()
+        self.question = q
+
+    def test_logout(self):
+        """A user can logout using the logout url."""
+        logout_url = reverse("logout")
+        self.assertTrue(
+            self.client.login(username=self.username, password=self.password)
+        )
+        response = self.client.post(logout_url, {})
+        self.assertEqual(302, response.status_code)
+        self.assertRedirects(response, reverse(settings.LOGOUT_REDIRECT_URL))
+
+    def test_login_view(self):
+        """A user can login using the login view."""
+        login_url = reverse("login")
+        response = self.client.get(login_url)
+        self.assertEqual(200, response.status_code)
+        form_data = {"username": "testuser", "password": "FatChance!"}
+        response = self.client.post(login_url, form_data)
+        self.assertEqual(302, response.status_code)
+        self.assertRedirects(response, reverse(settings.LOGIN_REDIRECT_URL))
+
+    def test_auth_required_to_vote(self):
+        """Authentication is required to submit a vote."""
+        vote_url = reverse('polls:vote', args=[self.question.id])
+        choice = self.question.choice_set.first()
+        form_data = {"choice": f"{choice.id}"}
+        response = self.client.post(vote_url, form_data)
+        self.assertEqual(response.status_code, 302)
+        login_with_next = f"{reverse('login')}?next={vote_url}"
+        self.assertRedirects(response, login_with_next)
 
