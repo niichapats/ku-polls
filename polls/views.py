@@ -1,4 +1,4 @@
-"""This module contains views of polls app"""
+import logging
 from django.db.models import F
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
@@ -8,9 +8,41 @@ from django.utils import timezone
 from django.contrib import messages
 from django.contrib.messages import get_messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed  # Import signals
+from django.dispatch import receiver  # Import receiver for signals
 
 from .models import Question, Choice, Vote
 
+# Get a logger for this module
+logger = logging.getLogger('polls')
+
+def get_client_ip(request):
+    """Get the visitor’s IP address using request headers."""
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+@receiver(user_logged_in)
+def log_user_login(sender, request, user, **kwargs):
+    """Log the user login event."""
+    ip_address = get_client_ip(request)
+    logger.info(f'User {user.username} logged in from {ip_address}')
+
+@receiver(user_logged_out)
+def log_user_logout(sender, request, user, **kwargs):
+    """Log the user logout event."""
+    ip_address = get_client_ip(request)
+    logger.info(f'User {user.username} logged out from {ip_address}')
+
+@receiver(user_login_failed)
+def log_failed_login(sender, credentials, request, **kwargs):
+    """Log the failed login attempt."""
+    ip_address = get_client_ip(request)
+    username = credentials.get('username', 'unknown')
+    logger.warning(f'User {username} login failed from {ip_address}')
 
 class IndexView(generic.ListView):
     """Take request to index.html which displays the latest few questions."""
@@ -23,7 +55,6 @@ class IndexView(generic.ListView):
         (not including those set to be published in the future).
         """
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
-
 
 class DetailView(generic.DetailView):
     """
@@ -55,7 +86,6 @@ class DetailView(generic.DetailView):
 
         return super().get(request, *args, **kwargs)
 
-
 class ResultsView(generic.DetailView):
     """
     Take request to results.html
@@ -63,34 +93,6 @@ class ResultsView(generic.DetailView):
     """
     model = Question
     template_name = "polls/results.html"
-
-
-def vote(request, question_id):
-    """Handles voting for a particular choice in a particular question."""
-    question = get_object_or_404(Question, pk=question_id)
-
-    if not question.is_published():
-        messages.error(request, "This poll has not been published yet.")
-        return HttpResponseRedirect(reverse('polls:index'))
-
-    if not question.can_vote():
-        messages.error(request, "The voting period for this poll has ended.")
-        return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
-
-    try:
-        selected_choice = question.choice_set.get(pk=request.POST['choice'])
-    except (KeyError, Choice.DoesNotExist):
-        context = {
-            "question": question,
-            "error_message": "You didn’t select a choice.",
-        }
-        return render(request, "polls/detail.html", context)
-
-    selected_choice.votes = F("votes") + 1
-    selected_choice.save()
-
-    return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
-
 
 @login_required
 def vote(request, question_id):
@@ -123,9 +125,13 @@ def vote(request, question_id):
         vote.choice = selected_choice
         vote.save()
         messages.success(request, f"Your vote was changed to '{selected_choice.choice_text}'")
+        logger.info(f"{this_user.username} changed vote for question {question.id} to choice {selected_choice.id}")
     except Vote.DoesNotExist:
         Vote.objects.create(user=this_user, choice=selected_choice)
         messages.success(request, f"You voted for '{selected_choice.choice_text}'")
+        logger.info(f"{this_user.username} voted for question {question.id} choice {selected_choice.id}")
+    except Exception as ex:
+        logger.exception(f"Exception occurred while voting for question {question.id} by user {this_user.username}: {str(ex)}")
 
     # Redirect to the results page after voting
     return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
