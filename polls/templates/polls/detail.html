@@ -1,28 +1,32 @@
-{% load static %}
+{% extends 'polls/base.html' %}
 
-<link rel="stylesheet" href="{% static 'polls/style.css' %}">
+{% block title %}
+    Poll Detail
+{% endblock %}
 
-<h1>{{ question.question_text }}</h1>
+{% block content %}
+    <h2>{{ question.question_text }}</h2>
 
-{% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
 
-{% if question.can_vote %}
-  <form action="{% url 'polls:vote' question.id %}" method="post">
-    {% csrf_token %}
-    {% for choice in question.choice_set.all %}
-      <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-      <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
-    {% endfor %}
-    <button type="submit">Vote</button>
-  </form>
-{% endif %}
+    {% if question.can_vote %}
+      <form action="{% url 'polls:vote' question.id %}" method="post">
+        {% csrf_token %}
+        {% for choice in question.choice_set.all %}
+          <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+          <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+        {% endfor %}
+        <button type="submit">Vote</button>
+      </form>
+    {% endif %}
 
-<a href="{% url 'polls:results' question.id %}" class="result-link">Results</a>
-<br>
-<a href="{% url 'polls:index' %}" class="to-list-button">Back to list of polls</a>
+    <a href="{% url 'polls:results' question.id %}" class="result-link">Results</a>
+    <br>
+    <a href="{% url 'polls:index' %}" class="to-list-button">Back to list of polls</a>
+{% endblock %}
