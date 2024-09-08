@@ -1,19 +1,13 @@
-{% load static %}
+{% extends 'polls/base.html' %}
 
-<link rel="stylesheet" href="{% static 'polls/style.css' %}">
+{% block title %}
+    Polls Index
+{% endblock %}
+
+{% block content %}
 
 <h1 class="ku-polls-title">KU-Polls</h1>
-
-<div class="container">
-    {% if user.is_authenticated %}
-    Welcome back, {{ user.username }}
-    <form action="{% url 'login' %}" method="post">
-        {% csrf_token %}
-        <button>Logout</button>
-    {% else %}
-       Please <a href="{% url 'login' %}?next={{request.path}}">Login</a>
-    {% endif %}
-</div>
+<br>
 
 {% if latest_question_list %}
     <ul>
@@ -28,3 +22,4 @@
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
+{% endblock %}
