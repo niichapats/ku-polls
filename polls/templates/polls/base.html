@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+    <title>{% block title %}KU Polls{% endblock %}</title>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div>
+            {% block page_header %}
+                {% if user.is_authenticated %}
+                    <h3>Welcome back, {{ user.username }}</h3>
+                {% else %}
+
+                {% endif %}
+            {% endblock %}
+            {% if user.is_authenticated %}
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Log Out</button>
+                </form>
+            {% else %}
+                <h3>Please <a href="{% url 'login' %}?next={{request.path}}">Login</a></h3>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Main Content Section -->
+    <div>
+        {% block content %}
+        <!-- Content of the page will go here -->
+        {% endblock %}
+    </div>
+
+</body>
+</html>
