@@ -17,10 +17,11 @@ body {
 
 h1.ku-polls-title {
     color: #6E2C00;
-    font-size: 40px;
-    text-align: left;
+    font-size: 50px;
+    text-align: center;
     margin: 20px 20px;
 }
+
 .messages li {
     font-size: 20px;
     margin: 5px 5px;
@@ -29,7 +30,7 @@ h1.ku-polls-title {
 .to-list-button {
     display: inline-block;
     padding: 10px 20px;
-    margin: 10px 10px;
+    margin: 20px 20px;
     background-color: #CD5C5C;
     color: white;
     text-decoration: none;
@@ -38,7 +39,33 @@ h1.ku-polls-title {
 }
 
 .result-link {
-    color: ##DC7633;
+    color: #c6343f;
     font-size: 18px;
     font-weight: normal;
-    margin-left: 10px;
+    margin-left: 20px;
+}
+
+.results {
+    border-collapse: collapse;
+    margin: 25px 0;
+    min-width: 400px;
+    font-family: 'Roboto', sans-serif;
+    color: black;
+    margin-left: 50px;
+}
+
+.results th, .results td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+.results th {
+    background-color: #dfa97b;
+    color: white;
+}
+
+.results td {
+    background-color: white;
+    color: #d36c17;
+}

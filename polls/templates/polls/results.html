@@ -9,7 +9,7 @@
     <h1>{{ question.question_text }}</h1>
     <h2>Poll Results</h2>
 
-    <table>
+    <table class="results">
         <thead>
             <tr>
                 <th>Choice</th>
@@ -28,5 +28,6 @@
 
     <br>
     <a href="{% url 'polls:index' %}" class="to-list-button">Back to list of polls</a>
+
 </body>
 </html>
