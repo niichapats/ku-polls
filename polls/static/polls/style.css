@@ -22,6 +22,22 @@ h1.ku-polls-title {
     margin: 20px 20px;
 }
 
+h1 {
+    color: #6E2C00;
+    font-size:35px;
+    text-align: center;
+    margin: 20px 20px;
+}
+
+h2 {
+    color: #885317;
+    font-size:30px;
+    text-align: left;
+    margin: 10px 20px;
+    padding: 10px 30px;
+}
+
+
 .messages li {
     font-size: 20px;
     margin: 5px 5px;
@@ -30,7 +46,7 @@ h1.ku-polls-title {
 .to-list-button {
     display: inline-block;
     padding: 10px 20px;
-    margin: 20px 20px;
+    margin: 10px 55px;
     background-color: #CD5C5C;
     color: white;
     text-decoration: none;
@@ -42,7 +58,8 @@ h1.ku-polls-title {
     color: #c6343f;
     font-size: 18px;
     font-weight: normal;
-    margin-left: 20px;
+    margin-left: 50px;
+    padding: 30px 20px;
 }
 
 .results {
