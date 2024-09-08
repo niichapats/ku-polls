@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 class Question(models.Model):
@@ -34,4 +35,15 @@ class Choice(models.Model):
     votes = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.choice_text
+        return str(self.choice_text) if self.choice_text is not None else ''
+
+    @property
+    def votes(self):
+        """Return the number of votes for this choice."""
+        return self.vote_set.all().count()
+
+
+class Vote(models.Model):
+    """Record a choice for a question made by a user."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
