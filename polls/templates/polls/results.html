@@ -6,8 +6,18 @@
     <title>Poll Results</title>
 </head>
 <body>
+
+
     <h1>{{ question.question_text }}</h1>
     <h2>Poll Results</h2>
+
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
 
     <table class="results">
         <thead>
