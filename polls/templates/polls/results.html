@@ -1,43 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'polls/style.css' %}">
-    <title>Poll Results</title>
-</head>
-<body>
+{% extends 'polls/base.html' %}
 
+{% block title %}
+    Poll Results
+{% endblock %}
 
-    <h1>{{ question.question_text }}</h1>
-    <h2>Poll Results</h2>
+{% block content %}
+<h2>{{ question.question_text }}</h2>
+<h2>Poll Results</h2>
 
-    {% if messages %}
-      <ul class="messages">
-        {% for message in messages %}
-          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<table class="results">
+    <thead>
+        <tr>
+            <th>Choice</th>
+            <th>Votes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for choice in question.choice_set.all %}
+        <tr>
+            <td>{{ choice.choice_text }}</td>
+            <td>{{ choice.votes }}</td>
+        </tr>
         {% endfor %}
-      </ul>
-    {% endif %}
+    </tbody>
+</table>
 
-    <table class="results">
-        <thead>
-            <tr>
-                <th>Choice</th>
-                <th>Votes</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for choice in question.choice_set.all %}
-            <tr>
-                <td>{{ choice.choice_text }}</td>
-                <td>{{ choice.votes }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <br>
-    <a href="{% url 'polls:index' %}" class="to-list-button">Back to list of polls</a>
-
-</body>
-</html>
+<br>
+<a href="{% url 'polls:index' %}" class="to-list-button">Back to list of polls</a>
+{% endblock %}
