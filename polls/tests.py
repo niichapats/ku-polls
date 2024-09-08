@@ -3,7 +3,6 @@ import datetime
 from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
-from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from mysite import settings
 
@@ -175,6 +174,7 @@ class QuestionDetailViewTests(TestCase):
         response = self.client.get(url)
         self.assertContains(response, past_question.question_text)
 
+
 class UserAuthTest(TestCase):
 
     def setUp(self):
@@ -228,3 +228,27 @@ class UserAuthTest(TestCase):
         login_with_next = f"{reverse('login')}?next={vote_url}"
         self.assertRedirects(response, login_with_next)
 
+    def test_user_can_only_vote_once_per_question(self):
+        """Ensure a user can only have one vote per question."""
+        # Login the user
+        self.client.login(username=self.username, password=self.password)
+
+        # Submit first vote
+        choice1 = self.question.choice_set.first()
+        vote_url = reverse('polls:vote', args=[self.question.id])
+        response = self.client.post(vote_url, {"choice": choice1.id})
+        self.assertRedirects(response, reverse('polls:results', args=[self.question.id]))
+
+        # Verify one vote recorded
+        self.assertEqual(self.user1.vote_set.count(), 1)
+        self.assertEqual(choice1.vote_set.count(), 1)
+
+        # Submit a second vote for a different choice
+        choice2 = self.question.choice_set.last()
+        response = self.client.post(vote_url, {"choice": choice2.id})
+        self.assertRedirects(response, reverse('polls:results', args=[self.question.id]))
+
+        # Verify the vote has changed to the new choice
+        self.assertEqual(self.user1.vote_set.count(), 1)
+        self.assertEqual(choice1.vote_set.count(), 0)
+        self.assertEqual(choice2.vote_set.count(), 1)
