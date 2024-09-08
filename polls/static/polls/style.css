@@ -33,20 +33,134 @@ h2 {
     color: #885317;
     font-size:30px;
     text-align: left;
-    margin: 10px 20px;
+    margin-left: 150px;
     padding: 10px 30px;
 }
 
-
 .messages li {
+    font-size: 22px;
+    margin-left: 160px;
+}
+
+/* Index page */
+.question-box {
+    background-color: white;
+    padding: 15px;
+    margin: 40px 70px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Login page */
+.login-container {
+    width: 350px;
+    margin: 100px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #6E2C00;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: 90%;  /* กำหนดความกว้างเต็มคอนเทนเนอร์ */
+    padding: 10px;
+    margin: 10px 0px;
+    border: 1px solid #ddd;  /* ขอบปกติ */
+    border-radius: 5px;  /* มุมโค้งมน */
+}
+
+.login-container button {
+    width: 90%;
+    padding: 10px;
+    background-color: #CD5C5C;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.login-container button:hover {
+    background-color: #B03A2E;
+}
+
+.login-container p {
+    margin-top: 15px;
+    color: #6E2C00;
+}
+
+
+/* Base */
+.logout-button{
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px 20px;
+    background-color: #95745E;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    font-weight: bold;
+}
+
+
+/* Detail page */
+.error-message{
+    color: red;
+    font-size:35px;
+    text-align: left;
+    margin-left: 200px;
+}
+
+.vote-form {
+    text-align: left;
+    margin-left: 200px;
+}
+
+.vote-form input[type="radio"] {
+    transform: scale(1.5);
+    margin-right: 10px;
+    margin-bottom: 30px;
+}
+
+.vote-form label {
+    color: #7C3D13;
     font-size: 20px;
-    margin: 5px 5px;
+    margin-bottom: 30px;
+}
+
+.vote-button {
+    display: inline-block;
+    background-color: #37C591;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px 0px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.vote-button:hover {
+    background-color: #259E72;
 }
 
 .to-list-button {
     display: inline-block;
     padding: 10px 20px;
-    margin: 10px 55px;
+    margin: 20px 200px;
     background-color: #CD5C5C;
     color: white;
     text-decoration: none;
@@ -54,13 +168,26 @@ h2 {
     font-weight: bold;
 }
 
-.result-link {
-    color: #c6343f;
+
+.result-button-detail {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 20px 200px;
+    background-color: #DF8043;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+
+.result-link-index {
+    color: #D1621A;
     font-size: 18px;
     font-weight: normal;
-    margin-left: 50px;
-    padding: 30px 20px;
+    margin-left: 5px;
 }
+
 
 .results {
     border-collapse: collapse;
@@ -68,7 +195,7 @@ h2 {
     min-width: 400px;
     font-family: 'Roboto', sans-serif;
     color: black;
-    margin-left: 50px;
+    margin-left: 180px;
 }
 
 .results th, .results td {
