@@ -9,17 +9,29 @@ additional features.
 This app was created as part of the [Individual Software Process](
 https://cpske.github.io/ISP) course at [Kasetsart University](https://www.ku.ac.th).
 
+
 ## Installation
 
-To be added. If the procedure is long, put it in the wiki or a separate file.
+For installation instructions, please refer to the [Installation.md](./Installation.md) file in the repository.
 
 ## Running the Application
 
-To be added.
+```
+python manage.py runserver
+```
+
+## Demo Users
+
+| Username | Password  |
+|----------|-----------|
+| admin    | 123456789 |
+| demo1    | hackme11  |
+| demo2    | hackme22  |
+| demo3    | hackme33  |
 
 ## Project Documents
 
-All project documents are in the [Project Wiki](../../wiki/Home).
+All project documents can be found in the [Project Wiki](../../wiki/Home).
 
 - [Vision Statement](../../wiki/Vision-and-Scope)
 - [Requirements](../../wiki/Requirements)
