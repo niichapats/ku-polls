@@ -15,8 +15,7 @@ jobs:
         python-version: [3.11]
 
     steps:
-    - name: Check out code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
@@ -28,12 +27,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Set environment variables
+    - name: Set Environments
       run: |
+        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" > .env
         echo "DEBUG=${{ secrets.DEBUG }}" >> .env
-        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
-        echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" >> .env
         echo "TIME_ZONE=${{ secrets.TIME_ZONE }}" >> .env
+        echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" >> .env
+        echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
 
     - name: Apply Migrations
       run: |
