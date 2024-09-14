@@ -1,5 +1,4 @@
 import logging
-from django.db.models import F
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -49,34 +48,32 @@ def log_failed_login(sender, credentials, request, **kwargs):
 
 
 class IndexView(generic.ListView):
-    """Take request to index.html which displays the latest few questions."""
+    """
+    Take request to index.html which displays the latest few questions.
+
+    This view shows the latest five published questions.
+    """
+
     template_name = "polls/index.html"
     context_object_name = "latest_question_list"
 
     def get_queryset(self):
-        """
-        Return the last five published questions
-        (not including those set to be published in the future).
-        """
+        """Return the last five published questions."""
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
 
 
 class DetailView(generic.DetailView):
-    """
-    Take request to detail.html which displays
-    a question text, with no results but with a form to vote.
-    """
+    """Take request to detail.html which displays a question text."""
+
     model = Question
     template_name = "polls/detail.html"
 
     def get_queryset(self):
-        """
-        Return all published questions sorted by publication date from newest to oldest.
-        Exclude questions set to be published in the future.
-        """
+        """Return all published questions sorted by publication date from newest to oldest."""
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")
 
     def get_context_data(self, **kwargs):
+        """Get context data for rendering the detail view."""
         context = super().get_context_data(**kwargs)
         question = self.get_object()
 
@@ -85,7 +82,9 @@ class DetailView(generic.DetailView):
         if self.request.user.is_authenticated:
             try:
                 # Get the choice that the user has already voted for this question
-                user_vote = Vote.objects.get(user=self.request.user, choice__question=question)
+                user_vote = Vote.objects.get(
+                    user=self.request.user, choice__question=question
+                )
                 context['user_vote'] = user_vote.choice.id
             except Vote.DoesNotExist:
                 context['user_vote'] = None
@@ -95,6 +94,7 @@ class DetailView(generic.DetailView):
         return context
 
     def get(self, request, *args, **kwargs):
+        """Handle GET requests for the detail view."""
         question = self.get_object()
 
         # Check if the question is published
@@ -112,17 +112,15 @@ class DetailView(generic.DetailView):
 
 
 class ResultsView(generic.DetailView):
-    """
-    Take request to results.html
-    which displays results for a particular question.
-    """
+    """Take request to results.html."""
+
     model = Question
     template_name = "polls/results.html"
 
 
 @login_required
 def vote(request, question_id):
-    """ Handle user vote in a Django application."""
+    """Handle user vote in a Django application."""
     question = get_object_or_404(Question, pk=question_id)
 
     if not question.is_published():
@@ -150,21 +148,33 @@ def vote(request, question_id):
         vote = this_user.vote_set.get(choice__question=question)
         vote.choice = selected_choice
         vote.save()
-        messages.success(request, f"Your vote was changed to '{selected_choice.choice_text}'")
-        logger.info(f"{this_user.username} changed vote for question {question.id} to choice {selected_choice.id}")
+        messages.success(
+            request,
+            f"Your vote was changed to '{selected_choice.choice_text}'"
+        )
+        logger.info(
+            f"{this_user.username} changed vote for question {question.id} "
+            f"to choice {selected_choice.id}"
+        )
     except Vote.DoesNotExist:
         Vote.objects.create(user=this_user, choice=selected_choice)
         messages.success(request, f"You voted for '{selected_choice.choice_text}'")
-        logger.info(f"{this_user.username} voted for question {question.id} choice {selected_choice.id}")
+        logger.info(
+            f"{this_user.username} voted for question {question.id} choice "
+            f"{selected_choice.id}"
+        )
     except Exception as ex:
-        logger.exception(f"Exception occurred while voting for question {question.id} by user {this_user.username}: {str(ex)}")
+        logger.exception(
+            f"Exception occurred while voting for question {question.id} "
+            f"by user {this_user.username}: {str(ex)}"
+        )
 
     # Redirect to the results page after voting
     return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
 
 
 def results(request, question_id):
-    """ Display the results of a particular poll. """
+    """Display the results of a particular poll."""
     question = get_object_or_404(Question, pk=question_id)
     storage = get_messages(request)  # Get messages and remove them from the storage after display
 
