@@ -19,7 +19,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
-        python-version: [3.11]
+        python-version: '3.11'
 
     - name: Install dependencies
       run: |
@@ -28,10 +28,10 @@ jobs:
 
     - name: Set Environments
       run: |
-        echo "SECRET_KEY='${{ secrets.SECRET_KEY }}'" > testing.env
+        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" > testing.env
         echo "DEBUG=${{ secrets.DEBUG }}" >> testing.env
-        echo "ALLOWED_HOSTS='${{ secrets.ALLOWED_HOSTS }}'" >> testing.env
-        echo "TIME_ZONE='${{ secrets.TIME_ZONE }}'" >> testing.env
+        echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" >> testing.env
+        echo "TIME_ZONE=${{ secrets.TIME_ZONE }}" >> testing.env
         mv testing.env .env
 
     - name: Apply Migrations
