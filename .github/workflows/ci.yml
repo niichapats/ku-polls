@@ -34,7 +34,6 @@ jobs:
         echo "DEBUG='${{ secrets.DEBUG }}'" >> .env
         echo "TIME_ZONE='${{ secrets.TIME_ZONE }}'" >> .env
         echo "ALLOWED_HOSTS='${{ secrets.ALLOWED_HOSTS }}'" >> .env
-        echo "DATABASE_URL='${{ secrets.DATABASE_URL }}'" >> .env
 
     - name: Apply Migrations
       run: |
