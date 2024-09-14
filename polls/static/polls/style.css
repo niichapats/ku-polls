@@ -71,11 +71,11 @@ h2 {
 
 .login-container input[type="text"],
 .login-container input[type="password"] {
-    width: 90%;  /* กำหนดความกว้างเต็มคอนเทนเนอร์ */
+    width: 90%;
     padding: 10px;
     margin: 10px 0px;
-    border: 1px solid #ddd;  /* ขอบปกติ */
-    border-radius: 5px;  /* มุมโค้งมน */
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }
 
 .login-container button {
