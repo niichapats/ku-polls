@@ -36,6 +36,7 @@ All project documents can be found in the [Project Wiki](../../wiki/Home).
 - [Vision Statement](../../wiki/Vision-and-Scope)
 - [Requirements](../../wiki/Requirements)
 - [Project Plan](../../wiki/Project%20Plan)
+- [Domain Model](../../wiki/Domain-Model)
 
 ## Iteration Plan
 - [Iteration1](../../wiki/Iteration-1-Plan)
