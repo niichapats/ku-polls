@@ -1,6 +1,6 @@
 /* Error and message styling */
 .messages li {
-    color: #8B0000;
+    color: #DC1F1F;
     font-size: 22px;
     margin-left: 160px;
     padding: 20px 0px;
@@ -8,9 +8,9 @@
     font-weight: bold;
 }
 
-.message-index li {
-    color: #8B0000;
-    font-size: 22px;
+.messages-index li{
+    color: #DC1F1F;
+    font-size: 30px;
     text-align: center;
     font-weight: bold;
     list-style-type: none;
@@ -127,6 +127,10 @@ h2 {
     width: max-content;
 }
 
+.to-list-center-button:hover {
+    background-color: #BC3C3C;
+}
+
 /* Base */
 .logout-button{
     display: inline-block;
@@ -138,6 +142,10 @@ h2 {
     border-radius: 5px;
     border: none;
     font-weight: bold;
+}
+
+.logout-button:hover {
+    background-color: #755641;
 }
 
 /* Detail page */
@@ -186,6 +194,10 @@ h2 {
     font-weight: bold;
 }
 
+.to-list-button:hover {
+    background-color: #BC3C3C;
+}
+
 .result-button-detail {
     display: inline-block;
     padding: 10px 20px;
@@ -197,11 +209,26 @@ h2 {
     font-weight: bold;
 }
 
-.result-link-index {
-    color: #D1621A;
+.result-button-detail:hover {
+    background-color: #C7672A;
+}
+
+
+.result-button-index {
     font-size: 18px;
-    font-weight: normal;
-    margin-left: 5px;
+    text-align: center;
+    display: inline-block;
+    padding: 10px 10px;
+    margin: 10px 0px;
+    background-color: #DF8043;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    width: 100px
+}
+
+.result-button-index:hover {
+    background-color: #C7672A;
 }
 
 .results {
