@@ -156,3 +156,7 @@ cython_debug/
 
 # PyCharm
 .idea/
+
+# Coverage
+.coverage
+htmlcov/
