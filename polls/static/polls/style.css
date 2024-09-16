@@ -113,6 +113,20 @@ h2 {
     color: #6E2C00;
 }
 
+/* Center button for list link */
+.to-list-center-button {
+    display: block;
+    padding: 10px 20px;
+    margin: 20px auto;
+    background-color: #CD5C5C;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    width: max-content;
+}
+
 /* Base */
 .logout-button{
     display: inline-block;
