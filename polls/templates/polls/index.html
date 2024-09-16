@@ -10,10 +10,10 @@
 <br>
 
 {% if messages %}
-    <div class="message-index">
+    <div class="messages-index">
         <ul>
             {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                <li class="messages-index{% if message.tags %} {{ message.tags }}{% endif %}">{{ message }}</li>
             {% endfor %}
         </ul>
     </div>
@@ -25,7 +25,7 @@
         <li class="question-box">
             <a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>
             <br>
-            <a href="{% url 'polls:results' question.id %}" class="result-link-index">Results</a>
+            <a href="{% url 'polls:results' question.id %}" class="result-button-index">Results</a>
         </li>
     {% endfor %}
     </ul>
