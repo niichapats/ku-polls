@@ -53,7 +53,6 @@ class IndexView(generic.ListView):
 
     This view shows the latest five published questions.
     """
-
     template_name = "polls/index.html"
     context_object_name = "latest_question_list"
 
@@ -95,20 +94,25 @@ class DetailView(generic.DetailView):
 
     def get(self, request, *args, **kwargs):
         """Handle GET requests for the detail view."""
-        question = self.get_object()
+        question_id = self.kwargs['pk']
+        try:
+            question = get_object_or_404(Question, pk=question_id)
 
-        # Check if the question is published
-        if not question.is_published():
-            messages.error(request, "This poll is not yet published.")
-            return redirect('polls:index')
+            # Check if the question is published
+            if not question.is_published():
+                messages.error(request, "This poll is not yet published.")
+                return HttpResponseRedirect(reverse('polls:index'))
 
-        # Check if voting is allowed
-        if not question.can_vote():
-            messages.error(request, "The voting period for this poll has ended.")
-            # Render detail.html with the error message
-            return render(request, self.template_name, {'question': question})
+            # Check if voting is allowed
+            if not question.can_vote():
+                messages.error(request, "The voting period for this poll has ended.")
+                return HttpResponseRedirect(reverse('polls:index'))
 
-        return super().get(request, *args, **kwargs)
+            return super().get(request, *args, **kwargs)
+        except Exception as ex:
+            logger.error(f"Non-existent question {question_id} %s", ex)
+            messages.error(request, f'No question found with ID {question_id}.')
+            return HttpResponseRedirect(reverse('polls:index'))
 
 
 class ResultsView(generic.DetailView):
@@ -116,6 +120,17 @@ class ResultsView(generic.DetailView):
 
     model = Question
     template_name = "polls/results.html"
+
+    def get(self, request, *args, **kwargs):
+        """Handle GET requests for the results view."""
+        question_id = self.kwargs['pk']
+        try:
+            question = get_object_or_404(Question, pk=question_id)
+            return super().get(request, *args, **kwargs)
+        except Exception as ex:
+            logger.error(f"Non-existent question {question_id} %s", ex)
+            messages.error(request, f'No question found with ID {question_id}.')
+            return HttpResponseRedirect(reverse('polls:index'))
 
 
 @login_required
@@ -134,11 +149,8 @@ def vote(request, question_id):
     try:
         selected_choice = question.choice_set.get(pk=request.POST["choice"])
     except (KeyError, Choice.DoesNotExist):
-        context = {
-            "question": question,
-            "error_message": "You didn't select a choice.",
-        }
-        return render(request, "polls/detail.html", context)
+        messages.error(request, "You didn't select a choice.")
+        return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
 
     # Reference to the current user
     this_user = request.user
