@@ -68,7 +68,11 @@ class DetailView(generic.DetailView):
     template_name = "polls/detail.html"
 
     def get_queryset(self):
-        """Return all published questions sorted by publication date from newest to oldest."""
+        """
+        Return all published questions sorted by publication date from newest to oldest.
+        Excludes questions set to be published in the future.
+        """
+        # Filter questions to only include those published in the past or present
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")
 
     def get_context_data(self, **kwargs):
@@ -95,24 +99,20 @@ class DetailView(generic.DetailView):
     def get(self, request, *args, **kwargs):
         """Handle GET requests for the detail view."""
         question_id = self.kwargs['pk']
-        try:
-            question = get_object_or_404(Question, pk=question_id)
+        # Use the filtered queryset from get_queryset to include only valid questions
+        question = get_object_or_404(self.get_queryset(), pk=question_id)
 
-            # Check if the question is published
-            if not question.is_published():
-                messages.error(request, "This poll is not yet published.")
-                return HttpResponseRedirect(reverse('polls:index'))
+        # Check if the question is not published (past or present)
+        if not question.is_published():
+            messages.error(request, "This poll is not yet published.")
+            return redirect('polls:index')
 
-            # Check if voting is allowed
-            if not question.can_vote():
-                messages.error(request, "The voting period for this poll has ended.")
-                return HttpResponseRedirect(reverse('polls:index'))
-
-            return super().get(request, *args, **kwargs)
-        except Exception as ex:
-            logger.error(f"Non-existent question {question_id} %s", ex)
-            messages.error(request, f'No question found with ID {question_id}.')
+        # Check if voting is allowed
+        if not question.can_vote():
+            messages.error(request, "The voting period for this poll has ended.")
             return HttpResponseRedirect(reverse('polls:index'))
+
+        return super().get(request, *args, **kwargs)
 
 
 class ResultsView(generic.DetailView):
