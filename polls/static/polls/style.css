@@ -1,3 +1,21 @@
+/* Error and message styling */
+.messages li {
+    color: #8B0000;
+    font-size: 22px;
+    margin-left: 160px;
+    padding: 20px 0px;
+    list-style-type: none;
+    font-weight: bold;
+}
+
+.message-index li {
+    color: #8B0000;
+    font-size: 22px;
+    text-align: center;
+    font-weight: bold;
+    list-style-type: none;
+}
+
 li a {
     color: #6E2C00;
     font-size: 25px;
@@ -35,11 +53,6 @@ h2 {
     text-align: left;
     margin-left: 150px;
     padding: 10px 30px;
-}
-
-.messages li {
-    font-size: 22px;
-    margin-left: 160px;
 }
 
 /* Index page */
@@ -100,7 +113,6 @@ h2 {
     color: #6E2C00;
 }
 
-
 /* Base */
 .logout-button{
     display: inline-block;
@@ -114,15 +126,7 @@ h2 {
     font-weight: bold;
 }
 
-
 /* Detail page */
-.error-message{
-    color: red;
-    font-size:35px;
-    text-align: left;
-    margin-left: 200px;
-}
-
 .vote-form {
     text-align: left;
     margin-left: 200px;
@@ -168,7 +172,6 @@ h2 {
     font-weight: bold;
 }
 
-
 .result-button-detail {
     display: inline-block;
     padding: 10px 20px;
@@ -180,14 +183,12 @@ h2 {
     font-weight: bold;
 }
 
-
 .result-link-index {
     color: #D1621A;
     font-size: 18px;
     font-weight: normal;
     margin-left: 5px;
 }
-
 
 .results {
     border-collapse: collapse;
