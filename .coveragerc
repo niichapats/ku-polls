@@ -1,0 +1,26 @@
+[run]
+# Measure branch coverage to see if all code paths are tested
+branch = True
+
+# Do not measure coverage of Python standard libraries (default setting)
+cover_pylib = False
+
+# Omit files and directories that are not relevant to our code coverage
+omit =
+    __init__.py
+    /usr/*
+    mysite/*
+    */migrations/*
+    */tests/*
+    manage.py
+    */static/*
+
+# Explicitly include the main app (polls) for coverage
+include =
+    polls/*
+
+[report]
+# Exclude some methods that we don't need to test
+exclude_lines =
+    def __str__
+    def __repr__
