@@ -98,9 +98,16 @@ class DetailView(generic.DetailView):
 
     def get(self, request, *args, **kwargs):
         """Handle GET requests for the detail view."""
-        question_id = self.kwargs['pk']
         # Use the filtered queryset from get_queryset to include only valid questions
-        question = get_object_or_404(self.get_queryset(), pk=question_id)
+        # question = get_object_or_404(self.get_queryset(), pk=question_id)
+        question_id = self.kwargs["pk"]
+
+        try:
+            question = Question.objects.get(id=question_id)
+        except Question.DoesNotExist as ex:
+            logger.exception(f"Non-existent question {question_id} %s", ex)
+            messages.warning(request, f"No question found with ID {question_id}")
+            return redirect(reverse('polls:index'))
 
         # Check if the question is not published (past or present)
         if not question.is_published():
