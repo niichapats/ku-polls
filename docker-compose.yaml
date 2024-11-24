@@ -21,7 +21,7 @@ services:
       context: .
       args:
         SECRET_KEY: ${SECRET_KEY}
-    env_file: .env
+    env_file: docker.env
     environment:
       SECRET_KEY: ${SECRET_KEY}
       DEBUG: ${DEBUG}
