@@ -67,13 +67,13 @@ class DetailView(generic.DetailView):
     model = Question
     template_name = "polls/detail.html"
 
-    def get_queryset(self):
-        """
-        Return all published questions sorted by publication date from newest to oldest.
-        Excludes questions set to be published in the future.
-        """
-        # Filter questions to only include those published in the past or present
-        return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")
+    # def get_queryset(self):
+    #     """
+    #     Return all published questions sorted by publication date from newest to oldest.
+    #     Excludes questions set to be published in the future.
+    #     """
+    #     # Filter questions to only include those published in the past or present
+    #     return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")
 
     def get_context_data(self, **kwargs):
         """Get context data for rendering the detail view."""
@@ -107,7 +107,7 @@ class DetailView(generic.DetailView):
         except Question.DoesNotExist as ex:
             logger.exception(f"Non-existent question {question_id} %s", ex)
             messages.warning(request, f"No question found with ID {question_id}")
-            return redirect(reverse('polls:index'))
+            return redirect('polls:index')
 
         # Check if the question is not published (past or present)
         if not question.is_published():
@@ -117,7 +117,7 @@ class DetailView(generic.DetailView):
         # Check if voting is allowed
         if not question.can_vote():
             messages.error(request, "The voting period for this poll has ended.")
-            return HttpResponseRedirect(reverse('polls:index'))
+            return redirect('polls:index')
 
         return super().get(request, *args, **kwargs)
 
@@ -132,12 +132,12 @@ class ResultsView(generic.DetailView):
         """Handle GET requests for the results view."""
         question_id = self.kwargs['pk']
         try:
-            question = get_object_or_404(Question, pk=question_id)
+            question = Question.objects.get(pk=question_id)
             return super().get(request, *args, **kwargs)
-        except Exception as ex:
-            logger.error(f"Non-existent question {question_id} %s", ex)
+        except Question.DoesNotExist:
+            logger.error(f"Non-existent question {question_id}")
             messages.error(request, f'No question found with ID {question_id}.')
-            return HttpResponseRedirect(reverse('polls:index'))
+            return redirect('polls:index')
 
 
 @login_required
